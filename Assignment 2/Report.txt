@@ -1,0 +1,29 @@
+Q1.
+
+Here, we find out 4 points in the original image which provide 2 sets of parallel lines.
+To make the lines parallel in  world plane to be parallel in image plane, we need to find the vanishing line from these 4 points and then send it to infinity using a homography H. This H when applied to the image will make the lines parallel. But, in the problem statement we also need to find the fronto-rectilinear view of the image (make horixontal parallel to x axis and same with vertical). This can be done by selected a rectangle to project the image to and then warp the image contained by the parallel lines to those set of points.
+
+Q2a.
+
+Here we first calculate the following :
+
+	H1_b=Homography between blurred and image1
+	H2_b=Homography between blurred and image2
+
+Now to find the pixels in image1 and image2 which provide information to deblur the blurred image, say 'B', we find warp the two images each with their respective homographies and find the two outputs in plane of B. Then we calculated a mask for each image which gives those points which are not 0 or black in the warped image and use bitwise operations to add them to the blurred image. This is done for both outputs obtained after warping. Finally we get the result having a deblurred image.
+
+Q2b.
+
+Here we first calculate the following :
+
+	H1_2=Homography between image2 and image1
+
+Now, we warp image2 with the obtained homography to get output O. This O is obtained on a size of hx2*w so that we can use the matched keypoints between image1 and image2 to later add to this canvas and obtain a panorama. Since O consists of projection of image2, the left part of O will be filled using image1. Like part 2a, we calculate a mask from image 1 and then use bitwise operations to add it to the output O. The final result displays a mosaiced image.
+
+Q2c.
+
+Here we first calculate the following :
+
+	H1_2=Homography between image2 and image1
+
+Now, image1 is bilinearly interpolated to size (times=2)x. Then to use information from image2 in the interpolation, we get the warp of image2 using the above homography. Then for each pixel in the interpolated image, we find the maximum between interpolated[i,j] and projected[i/times,j/times] so that if image2 has more valuable pixel information we use that. Result contains an upscaled version of image1.
